@@ -88,3 +88,7 @@ lr_auc <-
   mutate(model = "Logistic Regression")
 
 autoplot(lr_auc)
+
+lr_res %>% 
+  collect_predictions(parameters = lr_best) %>% 
+  roc_auc(truth = serious_fatal, .pred_1)

@@ -33,7 +33,7 @@ df$UPC_CDE = as.factor(df$UPC_CDE)
 str(df)
 print(df)
 
-
-
-
+library(DMwR)
+clean_smote <- SMOTE(serious_fatal ~ ., clean, perc.over = 800, perc.under = 200)
+table(clean_smote$serious_fatal) # highly imbalance
 

@@ -47,10 +47,10 @@ library(data.table)
 read_data <- function(address){
   fread(address)
 }
-involved_persons <- read_data(address = "RA1 Assignment/involved_persons.csv")
-collisions <- read_data(address = "RA1 Assignment/collision_events.csv")
-preprocessed_collisions <- read_data(address = "data/intermediate/preprocessed_collision.csv")
-preprocessed_injured_persons <- read_data(address = "data/intermediate/preprocessed_involved_persons.csv")
+#involved_persons <- read_data(address = "RA1 Assignment/involved_persons.csv")
+#collisions <- read_data(address = "RA1 Assignment/collision_events.csv")
+#preprocessed_collisions <- read_data(address = "data/intermediate/preprocessed_collision.csv")
+#preprocessed_injured_persons <- read_data(address = "data/intermediate/preprocessed_involved_persons.csv")
 # ____________________________________________________________________________________________________________________
 # package dependencies
 library(dplyr)
@@ -227,8 +227,8 @@ library(data.table)
 #' @return
 #' The output data frame with are written to the clean folder in the data folder
 
-cleaned_data <- function() {
-  join_df <- preprocessed_injured_persons %>% left_join(preprocessed_collisions, by = "collision_no")
+cleaned_data <- function(data1, data2) {
+  join_df <- data2 %>% left_join(data1, by = "collision_no")
 
   clean_df <- join_df %>%
     mutate(
@@ -277,7 +277,8 @@ cleaned_data <- function() {
 #' The outputs are data frames
 #'
 combined_wrangling <- function() {
-  #dataDownload(id = "1Hnlicnek_4BEEsOMeEhSiRc0sEhiLsew") # data download
+  
+  dataDownload(id = "1Hnlicnek_4BEEsOMeEhSiRc0sEhiLsew") # data download
 
   # data for preprocessing
   involved_persons <- read_data(address = "RA1 Assignment/involved_persons.csv")
@@ -287,7 +288,7 @@ combined_wrangling <- function() {
   # transformations
   preprocessed_collisions <- read_data(address = "data/intermediate/preprocessed_collision.csv")
   preprocessed_injured_persons <- read_data(address = "data/intermediate/preprocessed_involved_persons.csv")
-  cleaned_data()
+  cleaned_data(data1 =preprocessed_collisions, data2 = preprocessed_injured_persons)
 }
 
 combined_wrangling()
