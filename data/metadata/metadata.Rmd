@@ -1,0 +1,24 @@
+---
+title: "Metadata on raw data"
+author: "Dr. Eric Asare"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Introduction
+
+The entire data set for this projects was downloaded with the "gdown" python package from the shared google drive folder RA1 Assignment. The data set contains information on collisions that occurred in the City of Toronto from .....The files in the dataset are 
+
+## 1.1 Collision Events
+
+
+## 1.2 Involved Persons
+
+
+## 1.3 Data Dictionaries
+
+# 2. Summary

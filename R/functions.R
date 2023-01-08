@@ -7,12 +7,12 @@
 # Date script last modified: Saturday January 6 2023
 
 # The functions are described below:
-library(profvis)
 
 # package dependencies
 library(reticulate)
 py_install("gdown")
 gd <- import("gdown")
+
 
 #' @title
 #' Download data from Google Drive
@@ -30,6 +30,27 @@ dataDownload <- function(id) {
   gd$download_folder(id = id, quiet = T, use_cookies = F)
 }
 
+#___________________________________________________________________________________________________________________
+
+# package dependencies
+library(data.table)
+
+#' @title
+#' Read data from working directory
+#' @description
+#' The read_data function wraps the fread function in data.table to read data from working directory.
+#' @param
+#' The only parameter is address, which is the complete location of where the data is stored. It must be in parenthesis
+#' @return
+#' Th output is data.frame which is accessible in the R session
+
+read_data <- function(address){
+  fread(address)
+}
+involved_persons <- read_data(address = "RA1 Assignment/involved_persons.csv")
+collisions <- read_data(address = "RA1 Assignment/collision_events.csv")
+preprocessed_collisions <- read_data(address = "data/intermediate/preprocessed_collision.csv")
+preprocessed_injured_persons <- read_data(address = "data/intermediate/preprocessed_involved_persons.csv")
 # ____________________________________________________________________________________________________________________
 # package dependencies
 library(dplyr)
@@ -43,7 +64,7 @@ library(dplyr)
 #' @param
 #' The parameter is the data to be checked
 #' @return
-#' The output is dataframe
+#' The output is data.frame
 
 missing_empty_information <- function(data, address) {
   df1 <- data %>%
@@ -164,9 +185,9 @@ library(data.table)
 #' The output data frame with are written to the intermediate folder in the data folder
 
 # _____filter NA and ""
-preprocessing <- function() {
+preprocessing <- function(data1, data2) {
   # Collision data
-  df1 <- check_duplicates(collisions)
+  df1 <- check_duplicates(data1)
   df1 <- df1 %>%
     dplyr::select(-c(district, location_class, road_class)) %>%
     mutate(accdate = as.Date(accdate)) %>%
@@ -175,7 +196,7 @@ preprocessing <- function() {
     fwrite("data/intermediate/preprocessed_collision.csv")
 
   # Involved_persons data
-  df2 <- check_duplicates(involved_persons)
+  df2 <- check_duplicates(data2)
   df2 <- df2 %>%
     dplyr::select(-c(actual_speed, driver_condition, posted_speed, impact_location, manoeuver, vehicle_class)) %>%
     mutate(accdate = as.Date(accdate)) %>%
@@ -240,7 +261,7 @@ cleaned_data <- function() {
       serious_fatal, latitude, longitude, age_65plus, pedestrian_act_right, impaired_pedestrian_cond,
       pedestrian_inattentive, collision_midblock, collision_inter_wrow,
       collision_inter_row, weather_bad, no_traffic_control, dark
-    ) %>%
+    ) %>% 
     fwrite("data/clean/cleaned_df.csv")
 }
 
@@ -256,12 +277,12 @@ cleaned_data <- function() {
 #' The outputs are data frames
 #'
 combined_wrangling <- function() {
-  dataDownload(id = "1Hnlicnek_4BEEsOMeEhSiRc0sEhiLsew") # data download
+  #dataDownload(id = "1Hnlicnek_4BEEsOMeEhSiRc0sEhiLsew") # data download
 
   # data for preprocessing
+  involved_persons <- read_data(address = "RA1 Assignment/involved_persons.csv")
   collisions <- read_data(address = "RA1 Assignment/collision_events.csv")
-  collisions <- read_data(address = "RA1 Assignment/collision_events.csv")
-  preprocessing()
+  preprocessing(data1 = collisions, data2 = involved_persons )
 
   # transformations
   preprocessed_collisions <- read_data(address = "data/intermediate/preprocessed_collision.csv")
@@ -270,3 +291,6 @@ combined_wrangling <- function() {
 }
 
 combined_wrangling()
+
+
+
