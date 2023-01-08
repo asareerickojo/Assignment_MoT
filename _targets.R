@@ -26,13 +26,54 @@ tar_source()
 
 # Replace the target list below with your own:
 list(
-  tar_target(
+  tar_target(address
     name = data,
     command = tibble(x = rnorm(100), y = rnorm(100))
-#   format = "feather" # efficient storage of large data frames # nolint
+    #   format = "feather" # efficient storage of large data frames # nolint
   ),
   tar_target(
     name = model,
     command = coefficients(lm(y ~ x, data = data))
   )
 )
+
+tar_pipeline(
+  tar_target(   #Check it out…about some data stuff
+                clean,
+                tidytuesdayR::tt_load(2020, week = 28)$coffee,
+                cue = tar_cue("never")
+  ),
+  tar_target(clean_split, initial_split(clean, prop = 0.8)),
+  tar_target(clean_train, training(clean_split)),
+  tar_target(clean_test, testing(clean_split)),
+  tar_target(clean_recipe, 
+             recipe(serious_fatal ~ ., data = train_data)  %>% step_normalize(latitude, longitude) %>% step_zv(all_predictors()
+             ),    #define the function
+             tar_target(
+               clean_model,
+               logistic_reg() %>% set_engine("glm")
+             ),
+             tar_target(
+               clean_workflow,
+               workflow() %>% add_model(lr_mod) %>% add_recipe(clean_recipe)
+             ),
+             tar_target(
+               clean_model_fit,
+               clean_workflow %>% fit(data = clean_train)
+             ),
+             tar_target(
+               clean_model_predict,
+               predict(clean_model_fit, clean_test, type = "prob") %>% bind_cols(clean_test %>% select(serious_fatal)) 
+             ),
+             tar_target(
+               metrics,
+               clean_model_pred %>% roc_auc(truth = serious_fatal, .pred_1) 
+             )
+  )
+)
+
+
+
+
+
+
