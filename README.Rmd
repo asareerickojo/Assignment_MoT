@@ -44,26 +44,14 @@ C. if you have Windows install pandoc through the command "winget install pandoc
 In the renv.lock file in the root folder, you will find important information on all the packages I used for this project. 
 
 ## Future Work
+In the future, given more time and resources, I would collect more data which will be a plausible best solution to the imbalance data problem than using a second-best synthetic resampling procedure like SMOTE. Also, I will investigate the poor model performance further. Some of the actions I may consider undertaking are:   
 
+A. comparing several classification machine learning algorithms.
+B. explore more hyper-parameter tuning of algorithms parameter space.
+C. conduct more feature engineering and maybe use principal component analysis to combine several variables.
 
 ## Credits
 
 ## License
 
 This project was conducted for the Ministry of Transportation as part of a job interviewing process. Access is retricted only to that institution and the affiliations they will authorize to modify the project.
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub.
