@@ -18,7 +18,7 @@ The project investigates the drivers that explain the probability that a pedestr
 
 ## Methods
 
-Random Forest algorithm was implemented through the "Ranger package" in R to solve this classification problem. The Random Forest model parameters mtry (...) and min_n were hyper-tuned using the grid search method in Ranger. The processed data had 1677 rows and 12 variables (excluding the binary outcome variable). The data was imbalanced since the class pedestrian collision resulting in mojor injury or fatality accounted for 11% of the rows in the outcome variable (serious_fatality). The imbalanced problem was solved with the SMOTE algorithm in the "DMwR" R package. This increased the representation of the minoriy class to 24%. 
+Random Forest algorithm was implemented through the "Ranger package" in R to solve this classification problem. The Random Forest model parameters mtry (the number of variables randomly selected as candidates in each split) and min_n (the minimum number of data points in each node required for it to be split further) were hyper-tuned using the grid search method in Ranger. The processed data had 1677 rows and 12 variables (excluding the binary outcome variable). The data was imbalanced since the class pedestrian collision resulting in mojor injury or fatality accounted for 11% of the rows in the outcome variable (serious_fatality). The imbalanced problem was solved with the SMOTE algorithm in the "DMwR" R package. This increased the representation of the minoriy class to 24%. 
 
 ## Results
 
@@ -28,27 +28,21 @@ Figure 1. below shows the factors that are key to explaining the likelihood of a
 knitr::include_graphics("results/plots/variable_importance.png")
 ```
 
-The 
-
-
-Wehort description explaining the what, why, and how. What was your motivation? Why did you build this project? (Note: The answer is not "Because it was a homework assignment.") What problem does it solve? What did you learn? What makes your project stand out?
-
-
 ## Installation
 The project has been designed to ensure reproducibilty through the Renv package in R. You can replicate the results through the following options:    
 
-A. In the root folder of this repository, you can run the run.R script to automatically implement the data wrangling, SMOTE analysis, and model estimation. You can also modify the custom functions in functions.R script (R/functions.R) to change the results of the study.   
-B. if you are using Mac you can run the run.R script: i) in the command line type cd working directory, ii). run the command "Rscript run.R". If you do not have pandoc please install with "brew install pandoc".  
-C. if you have Windows install pandoc through the command "winget install pandoc" and run the run.R script.    
+1. In the root folder of this repository, you can run the run.R script to automatically implement the data wrangling, SMOTE analysis, and model estimation. You can also modify the custom functions in functions.R script (R/functions.R) to change the results of the study.   
+2. if you are using Mac you can run the run.R script: i) in the command line type cd working directory, ii). run the command "Rscript run.R". If you do not have pandoc please install with "brew install pandoc".  
+3. if you have Windows install pandoc through the command "winget install pandoc" and run the run.R script.    
 
 In the renv.lock file in the root folder, you will find important information on all the packages I used for this project. 
 
 ## Future Work
 In the future, given more time and resources, I would collect more data which will be a plausible best solution to the imbalance data problem than using a second-best synthetic resampling procedure like SMOTE. Also, I will investigate the poor model performance further. Some of the actions I may consider undertaking are:   
 
-A. comparing several classification machine learning algorithms.
-B. explore more hyper-parameter tuning of algorithms parameter space.
-C. conduct more feature engineering and maybe use principal component analysis to combine several variables.
+1. comparing several classification machine learning algorithms.
+2. explore more hyper-parameter tuning of algorithms parameter space.
+3. conduct more feature engineering and maybe use principal component analysis to combine several variables.
 
 ## Credits
 

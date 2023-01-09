@@ -291,13 +291,13 @@ combined_wrangling <- function() {
 # ______________________________________________________________________________________________________________________
 
 #' @title
-#' integrates all functions
+#' Random Forest Model Estimation with Tidymodels
 #' @description
-#' The combined_wrangling function integrates all the functions and creates all corresponding data, especially the final cleaned data.
+#' This function integrates all the key Tidymodels functions, including recipes, workflow, to estimate the model.
 #' @param
-#' None
+#' A data frame containing the outcome and explanatory variables.
 #' @return
-#' The outputs are data frames
+#' Performance metrics of the model and variable importance plot.
 #'
 estimate_model <- function(data){   
   # __________Data splitting
