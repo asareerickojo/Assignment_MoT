@@ -35,13 +35,11 @@ Wehort description explaining the what, why, and how. What was your motivation? 
 
 
 ## Installation
-The project has been designed to ensure reproducibilty through the Renv package in R. You can replicate the results through the following two options:    
+The project has been designed to ensure reproducibilty through the Renv package in R. You can replicate the results through the following options:    
 
 A. In the root folder of this repository, you can run the run.R script to automatically implement the data wrangling, SMOTE analysis, and model estimation. You can also modify the custom functions in functions.R script (R/functions.R) to change the results of the study.   
-B1. if you are using Mac you can run the run.R script:    
-    i). in the command line type cd working directory,    
-    ii). run the command "Rscript run.R". If you do not have pandoc please install with "brew install pandoc"   
-B2. if you have Windows install pandoc through the command "winget install pandoc" and run the run.R script.    
+B. if you are using Mac you can run the run.R script: i) in the command line type cd working directory, ii). run the command "Rscript run.R". If you do not have pandoc please install with "brew install pandoc".  
+C. if you have Windows install pandoc through the command "winget install pandoc" and run the run.R script.    
 
 In the renv.lock file in the root folder, you will find important information on all the packages I used for this project. 
 

@@ -50,18 +50,17 @@ What did you learn? What makes your project stand out?
 ## Installation
 
 The project has been designed to ensure reproducibilty through the Renv
-package in R. You can replicate the results through the following two
+package in R. You can replicate the results through the following
 options:
 
 A. In the root folder of this repository, you can run the run.R script
 to automatically implement the data wrangling, SMOTE analysis, and model
 estimation. You can also modify the custom functions in functions.R
 script (R/functions.R) to change the results of the study.  
-B1. if you are using Mac you can run the run.R script:  
-i). in the command line type cd working directory,  
-ii). run the command “Rscript run.R”. If you do not have pandoc please
-install with “brew install pandoc”  
-B2. if you have Windows install pandoc through the command “winget
+B. if you are using Mac you can run the run.R script: i) in the command
+line type cd working directory, ii). run the command “Rscript run.R”. If
+you do not have pandoc please install with “brew install pandoc”.  
+C. if you have Windows install pandoc through the command “winget
 install pandoc” and run the run.R script.
 
 In the renv.lock file in the root folder, you will find important
@@ -80,16 +79,13 @@ and the affiliations they will authorize to modify the project.
 What is special about using `README.Rmd` instead of just `README.md`?
 You can include R chunks like so:
 
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
+    #>      speed           dist       
+    #>  Min.   : 4.0   Min.   :  2.00  
+    #>  1st Qu.:12.0   1st Qu.: 26.00  
+    #>  Median :15.0   Median : 36.00  
+    #>  Mean   :15.4   Mean   : 42.98  
+    #>  3rd Qu.:19.0   3rd Qu.: 56.00  
+    #>  Max.   :25.0   Max.   :120.00
 
 You’ll still need to render `README.Rmd` regularly, to keep `README.md`
 up-to-date. `devtools::build_readme()` is handy for this. You could also
