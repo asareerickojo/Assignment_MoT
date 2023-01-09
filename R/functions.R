@@ -66,7 +66,7 @@ library(dplyr)
 #' @return
 #' The output is data.frame
 
-missing_empty_information <- function(data, address) {
+missing_empty_information <- function(data) {
   df1 <- data %>%
     summarise_all(~ sum(. == "")) %>%
     t() %>%
@@ -233,10 +233,6 @@ cleaned_data <- function(data1, data2) {
   clean_df <- join_df %>%
     mutate(
       age_65plus = if_else(involved_age >= 65, 1, 0),
-      pedestrian_act_right = if_else(pedestrian_action == "CROSSING WITH RIGHT OF WAY" | pedestrian_action == "ON SIDEWALK OR SHOULDER" |
-        pedestrian_action == "PERSON GETTING ON/OFF SCHOOL BUS" | pedestrian_action == "CROSSING WITHOUT RIGHT OF WAY" |
-        pedestrian_action == "PERSON GETTING ON/OFF SCHOOL BUS" | pedestrian_action == "CROSSING WITHOUT RIGHT OF WAY" |
-        pedestrian_action == "CROSSING, PEDESTRIAN CROSSOVER", 1, 0),
       impaired_pedestrian_cond = if_else(pedestrian_condition == "ABILITY IMPAIRED, ALCOHOL OVER .80" |
         pedestrian_condition == "HAD BEEN DRINKING" |
         pedestrian_condition == "ABILITY IMPAIRED, DRUGS" |
@@ -258,7 +254,7 @@ cleaned_data <- function(data1, data2) {
         light == "DAWN, ARTIFICIAL" | light == "DAWN", 1, 0)
     ) %>%
     select(
-      serious_fatal, latitude, longitude, age_65plus, pedestrian_act_right, impaired_pedestrian_cond,
+      serious_fatal, latitude, longitude, age_65plus,impaired_pedestrian_cond,
       pedestrian_inattentive, collision_midblock, collision_inter_wrow,
       collision_inter_row, weather_bad, no_traffic_control, dark
     ) %>% 
@@ -291,7 +287,106 @@ combined_wrangling <- function() {
   cleaned_data(data1 =preprocessed_collisions, data2 = preprocessed_injured_persons)
 }
 
-combined_wrangling()
+# ______________________________________________________________________________________________________________________
 
-
+#' @title
+#' integrates all functions
+#' @description
+#' The combined_wrangling function integrates all the functions and creates all corresponding data, especially the final cleaned data.
+#' @param
+#' None
+#' @return
+#' The outputs are data frames
+#'
+estimate_model <- function(data){   
+  # __________Data splitting
+  set.seed(2000)
+  clean_split <- initial_split(data, prop = 0.8)
+  train_data <- training(clean_split)
+  test_data <- testing(clean_split)
+  
+  #___________Validation set
+  set.seed(1000)
+  val_set <- validation_split(train_data, 
+                              strata = serious_fatal, 
+                              prop = 0.80)
+  #________________________________________Model specification
+  cores <- parallel::detectCores()                                #detect number of cores on the local machine
+  model_spec <- 
+    rand_forest(mtry = tune(), min_n = tune(), trees = 2000) %>% 
+    set_engine("ranger", num.threads = cores) %>% 
+    set_mode("classification")
+  
+  # ______________________________________Create recipe 
+  model_recipe <-
+    recipe(serious_fatal ~ ., data = train_data) %>%
+    step_normalize(latitude, longitude) %>%
+    step_zv(all_predictors())
+  
+  # _____________________________________Create workflow
+  model_workflow <- 
+    workflow() %>% 
+    add_model(model_spec) %>% 
+    add_recipe(model_recipe)
+  
+  #______________________________________Train and tune
+  set.seed(2500)
+  model_training <- 
+    model_workflow %>% 
+    tune_grid(val_set,
+              grid = 25,
+              control = control_grid(save_pred = TRUE),
+              metrics = metric_set(roc_auc))
+  
+  #___select best model
+  best_model <- 
+    model_training %>% 
+    select_best(metric = "roc_auc")
+  
+  model_training_auc <- 
+    model_training %>% 
+    collect_predictions(parameters = best_model) %>% 
+    roc_curve(serious_fatal, .pred_1) %>% 
+    mutate(model = "Random Forest")
+  
+  #last model: rf cool
+  final_model <- 
+    rand_forest(mtry = 3, min_n = 15, trees = 2000) %>% 
+    set_engine("ranger", num.threads = cores, importance = "impurity") %>% 
+    set_mode("classification")
+  
+  # the last workflow
+  final_model_workflow <- 
+    model_workflow %>% 
+    update_model(final_model)
+  
+  #___________________ Final model estimation
+  set.seed(3000)
+  final_model_fit <- 
+    final_model_workflow %>% 
+    last_fit(clean_split)
+  
+  #___Estimated evaluation metric table
+  final_model_fit %>% 
+    collect_metrics() %>% 
+    as.data.frame() %>%
+    rename(metric = .metric, estimate = .estimate) %>%
+    select(metric, estimate) %>%
+    gt() %>%
+    gtsave("results/model/metric.docx")
+  
+  #____Variable importance plot
+  final_model_fit %>% 
+    extract_fit_parsnip() %>% 
+    vip(num_features = (ncol(data)-1))
+  ggsave("results/plots/variable_importance.png")
+  
+  
+  final_model_fit %>% 
+    collect_predictions() %>% 
+    roc_curve(serious_fatal, .pred_1) %>% 
+    autoplot()
+  ggsave("results/plots/roc_curve.png")
+  
+}  
 

@@ -1,18 +1,51 @@
 ---
-title: "data_exploration"
+title: "Data Wrangling and Exploration on Toronto's Pedestrian collisions and Injured Persons Data"
 author: "Dr. Eric Asare"
 date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
+library(data.table)
+library(SmartEDA) 
+library(tidyverse)
+collisions <- fread("collision_events.csv")
+involved_persons <- fread("involved_persons.csv") %>% filter(involved_class == "PEDESTRIAN")
+
 ```
 
-## R Markdown
+# 1. Background
+A bad data set which has errors is more likely to produce unreliable insights. This exercise is grouped into two main sections, which are data wrangling and data exploration. The goal is to produce a reliable dataset which can be used to produce reliable insights for the Minitry of Transportation. SmartEDA is the main R package that will be used to wrangle and explore the raw data.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## 1.1 Data Wrangling
+In this section, a) I will familiarize myself with the data (data discovery), b) clean the data by removing potential outliers, drop missing/empty information or replace them using imputation, and identify row and column duplicates, and c) validate the data by ensuring that columns contain consistent, accurate and expected range of values. 
 
+### A. Data Discovery
+The number of rows and columns of the collisions data are 504,069 and 12, respectively. Eight of the variables are non-numeric as expected. The involved persons data, which focuses pedestrian collisions, has 16,045 rows and 15 columns or variables. Most of the columns both data have significant amounts of missing (NA) or empty information (Table 1).
+
+```{r}
+
+```
+
+#### A.1. Collisions Data
+```{r}
+as.data.table(ExpData(collisions, type=2))
+```
+#### A.2. Injured Persons Data
+```{r}
+as.data.frame(ExpData(involved_persons, type=2))
+```
+
+
+or this project, data wrangling encompasses activities such as:  
+* unordered list
+    + sub-item 1 
+    + sub-item 2 
+        - sub-sub-item 1  
+* It is a problem because institutions  
+* hhh  
+who rely on such information for policy recommendations could lose lots of resources, including money, unreliable information from data analytics Unreliable insights from This data exercise will be grouped into data wrangling and data exploration. 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r cars}
