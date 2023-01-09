@@ -1,4 +1,5 @@
 rm(list=ls())
+library(renv)
 library(tidymodels)
 library(tidyverse)
 library(data.table)
@@ -7,9 +8,8 @@ library(DMwR)
 library(vip)
 library(gt)
 
-
 source("R/functions.R")
-
+#snapshot()
 #_____________________Data wrangling
 combined_wrangling()
 

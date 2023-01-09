@@ -9,9 +9,10 @@
 # The functions are described below:
 
 # package dependencies
-library(reticulate)
-py_install("gdown")
-gd <- import("gdown")
+library(reticulate)                                     #allows Python integration with R
+use_condaenv(condaenv = "ib_isync")                     #activate virtual environment
+py_install(packages = c("nomkl", "numpy", "gdown"))     #MKL library conflict
+gd <- import("gdown")                                   #import gdown package
 
 
 #' @title
